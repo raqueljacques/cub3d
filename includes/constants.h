@@ -1,30 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   constants.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/27 00:16:44 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/09/27 00:16:44 by rdos-san         ###   ########.fr       */
+/*   Created: 2025/09/27 00:42:57 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/09/27 00:42:57 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CONSTANTS_H
+# define CONSTANTS_H
 
-# include <time.h>
-# include <math.h>
-# include <fcntl.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-
-# include "../libraries/minilibx/mlx.h"
-# include "../libraries/libft/libft.h"
-
-# include "constants.h"
-# include "prototypes.h"
-# include "structs.h"
+# define KEY_ESC 65307
 
 #endif
