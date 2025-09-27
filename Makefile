@@ -1,43 +1,72 @@
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+# Nome do executável
+NAME        = cub3d
 
-NAME = cub3d
+# Compilador e flags
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror
 
-RM = rm -f
+# Diretórios principais
+SRC_DIR     = src
+INC_DIR     = includes
+LIBFT_DIR   = libraries/libft
+MLX_DIR     = libraries/minilibx
 
-SRCS =
+# Arquivos das bibliotecas
+LIBFT       = $(LIBFT_DIR)/libft.a
+MLX_LIB     = $(MLX_DIR)/libmlx.a
 
-OBJS = ${SRCS:.c=.o}
+# Flags extras para linkar a MinilibX no Linux
+MLXFLAGS    = -L$(MLX_DIR) -Lmlx -lmlx_Linux -lX11 -lXext
 
-INCLUDES = -I includes -I libft
+# Includes do projeto + libft + minilibx
+INCLUDES    = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
 
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+# Lista de todos os .c encontrados em src/
+SRCS        = $(shell find $(SRC_DIR) -type f -name "*.c")
 
+# Converte todos .c em .o
+OBJS        = $(SRCS:.c=.o)
+
+# Comando de remover
+RM          = rm -f
+
+# Regra padrão: compila tudo
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	@echo "Linking $(NAME)..."
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(LDFLAGS)
-	@echo "$(NAME) is ready!"
+# Como gerar o executável
+$(NAME): $(OBJS) $(LIBFT) $(MLX_LIB)
+	@echo "🔗 Linking $(NAME)..."
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
+	@echo "✅ $(NAME) is ready."
 
+# Compila a libft
 $(LIBFT):
-@make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
 
+# Compila a minilibx
+$(MLX_LIB):
+	@make -C $(MLX_DIR)
+
+# Regra genérica para compilar arquivos .c em .o
 %.o: %.c
-	@echo "Compiling $<..."
+	@echo "🛠️  Compiling $<..."
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-	clean:
-	@echo "Cleaning object files..."
+# Remove objetos
+clean:
+	@echo "🧹 Cleaning object files..."
 	@make -C $(LIBFT_DIR) clean
+	@make -C $(MLX_DIR) clean
 	@$(RM) $(OBJS)
 
+# Remove objetos e binário
 fclean: clean
-	@echo "Removing $(NAME)..."
-	@$(RM) $(NAME)
+	@echo "🧹 Removing  $(NAME)..."
 	@make -C $(LIBFT_DIR) fclean
+	@$(RM) $(NAME)
 
+# Recompila tudo do zero
 re: fclean all
 
+# Declara regras que não são arquivos
 .PHONY: all clean fclean re

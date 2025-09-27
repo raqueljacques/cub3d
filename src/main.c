@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/27 00:16:44 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/09/27 00:16:44 by rdos-san         ###   ########.fr       */
+/*   Created: 2025/09/27 00:11:55 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/09/27 02:38:50 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#include "../includes/cub3d.h"
 
-# include <time.h>
-# include <math.h>
-# include <fcntl.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        print_error("Usage: ./cub3d <map_file.cub>\n");
+        return (1);
+    }
+    validate_file(argv[1]);
 
-# include "../libraries/minilibx/mlx.h"
-# include "../libraries/libft/libft.h"
-
-# include "constants.h"
-# include "prototypes.h"
-# include "structs.h"
-
-#endif
+    return (0);
+}
