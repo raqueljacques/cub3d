@@ -19,6 +19,21 @@ Para executar o jogo, utilize o comando:
 ./cub3D <mapa.cub>
 ```
 
+## ⚠️ Possíveis Problemas de Compilação
+
+### Erro de Permissão na MinilibX
+Se você encontrar o erro `./configure: Permissão negada` durante a compilação, execute o seguinte comando para corrigir as permissões:
+
+```bash
+chmod +x libraries/minilibx/configure
+```
+
+Em seguida, tente compilar novamente:
+
+```bash
+make
+```
+
 ## 📁 Estrutura
 - `includes/` - Arquivos de cabeçalho.
 - `libraries/libft/` - Biblioteca auxiliar de funções em C.
