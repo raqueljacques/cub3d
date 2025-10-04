@@ -50,3 +50,6 @@ make
 ## 📄 Licença
 
 Projeto educacional para a 42 rj. Sem fins lucrativos.
+
+## TODOS:
+[] - Mudar o fd para -1 depois que fechar

@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 16:53:37 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/04 18:17:38 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/04 20:28:22 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,10 @@ static void	process_element_line_tokens(char **tokens, t_game *game)
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 {
 	int		fd;
-	char	cwd[1024];
+	char	*right_path;
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-	{
-		printf("Diretório de trabalho atual: %s\n", cwd);
-	}
-	else
-	{
-		perror("Erro ao obter diretório de trabalho");
-	}
-	fd = open(path, O_RDONLY);
+	right_path = ft_strtrim(path, " \n");
+	fd = open(right_path, O_RDONLY);
 	if (fd < 0)
 	{
 		print_error("Error: Cannot open texture file: ");
