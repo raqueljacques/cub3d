@@ -6,19 +6,20 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 16:57:27 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/04 17:05:44 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/08 10:53:41 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
 static char	**duplicate_map(t_game *game);
-static void	flood_fill(char **map_copy, int y, int x, int height);
+static int	flood_fill(char **map_copy, int y, int x, int height);
 
 void	validate_map_with_flood_fill(t_game *game)
 {
 	char	**map_copy;
 	int		height;
+	int		is_valid;
 
 	height = 0;
 	while (game->map[height])
@@ -30,42 +31,42 @@ void	validate_map_with_flood_fill(t_game *game)
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
-	flood_fill(map_copy, (int)game->player_y, (int)game->player_x, height);
+	is_valid = flood_fill(map_copy, (int)game->player_y, (int)game->player_x,
+			height);
 	free_split(map_copy);
+	if (!is_valid)
+	{
+		print_error("Error: The map is not enclosed by walls.\n");
+		free_game_data(game);
+		exit(EXIT_FAILURE);
+	}
 }
 
-static void	flood_fill(char **map_copy, int y, int x, int height)
+static int	flood_fill(char **map_copy, int y, int x, int height)
 {
 	// Condição de parada: Se atingir a borda do mapa é pq ta aberto.
-	if (y < 0 || y >= height || x < 0 || !map_copy[y][x])
-	{
-		print_error("Error: Map is open. Flood fill reached the edge.\n");
-		free_split(map_copy);
-		exit(EXIT_FAILURE);
-	}
+	if (y < 0 || y >= height || x < 0 || !map_copy[y] || !map_copy[y][x]
+		|| map_copy[y][x] == ' ')
+		return (0);
 	// Condição de parada: Se encontrar uma parede ('1') ou já foi preenchido ('F')
 	if (map_copy[y][x] == '1' || map_copy[y][x] == 'F')
-		return ;
-	// Condição de erro: Se encontrar um espaço é pq tem um buraco no mapa
-	if (map_copy[y][x] == ' ')
-	{
-		print_error("Error: Map is open. Path leads to an empty space.\n");
-		free_split(map_copy);
-		exit(EXIT_FAILURE);
-	}
-	// Marca a atual como preenchida
+		return (1);
 	map_copy[y][x] = 'F';
-	// Chama recursivamente para as 4 direções
-	flood_fill(map_copy, y + 1, x, height);
-	flood_fill(map_copy, y - 1, x, height);
-	flood_fill(map_copy, y, x + 1, height);
-	flood_fill(map_copy, y, x - 1, height);
+	if (!flood_fill(map_copy, y + 1, x, height))
+		return (0);
+	if (!flood_fill(map_copy, y - 1, x, height))
+		return (0);
+	if (!flood_fill(map_copy, y, x + 1, height))
+		return (0);
+	if (!flood_fill(map_copy, y, x - 1, height))
+		return (0);
+	return (1);
 }
 
 static char	**duplicate_map(t_game *game)
 {
 	char	**copy;
-	int		i;
+	int	i;
 
 	i = 0;
 	while (game->map[i])
