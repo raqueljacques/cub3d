@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 16:53:37 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/04 20:28:22 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/08 10:47:34 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,20 +79,24 @@ static void	process_element_line_tokens(char **tokens, t_game *game)
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 {
 	int		fd;
-	char	*right_path;
+	char	*trimmed_path;
 
-	right_path = ft_strtrim(path, " \n");
-	fd = open(right_path, O_RDONLY);
+	trimmed_path = ft_strtrim(path, " \n\t");
+	if (!trimmed_path)
+		exit(EXIT_FAILURE);
+	fd = open(trimmed_path, O_RDONLY);
 	if (fd < 0)
 	{
 		print_error("Error: Cannot open texture file: ");
-		print_error(path);
+		print_error(trimmed_path);
 		print_error("\n");
+		free(trimmed_path);
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
 	close(fd);
-	*dest = ft_strdup(path);
+	*dest = ft_strdup(trimmed_path);
+	free(trimmed_path);
 }
 
 static int	parse_color_rgb_to_int(const char *str)
@@ -117,8 +121,8 @@ static int	parse_color_rgb_to_int(const char *str)
 			return (-1);
 		}
 		color = (color << 8) | value;
-		free(rgb_values[i++]);
+		i++;
 	}
-	free(rgb_values);
+	free_split(rgb_values);
 	return (color);
 }
