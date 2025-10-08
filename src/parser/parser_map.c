@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:11:16 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/04 17:04:45 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/08 10:44:19 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	parse_map(int fd, t_game *game)
 {
 	char	*line;
 	char	*map_buffer;
-	char	*temp;
 
 	map_buffer = ft_strdup("");
 	while ((line = get_next_line(fd)))
@@ -28,10 +27,7 @@ void	parse_map(int fd, t_game *game)
 			free(line);
 			continue ;
 		}
-		temp = map_buffer;
 		map_buffer = ft_strjoin(map_buffer, line);
-		free(temp);
-		free(line);
 	}
 	if (*map_buffer == '\0')
 	{
