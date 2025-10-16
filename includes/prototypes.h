@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:16:14 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/04 17:33:37 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:48:18 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,13 @@
 
 # include "structs.h"
 
-// Utils
 int		print_error(const char *message);
+int	parse_color_rgb_to_int(const char *str);
 void	free_game_data(t_game *game);
 void	free_split(char **split);
-
-// Parser
+void	exit_with_error(const char *msg, t_game *game);
 void	parse_and_validate(char *filename, t_game *game);
-
-// Parser Map
 void	parse_map(int fd, t_game *game);
-void	validate_map(t_game *game);
-
-// Parser Elements
-void	parse_textures_and_colors(int fd, t_game *game);
-
-// Flood Fill Validation
+void	parser_elements(int fd, t_game *game);
 void	validate_map_with_flood_fill(t_game *game);
 #endif
