@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 16:57:27 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/08 10:53:41 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:00:41 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ void	validate_map_with_flood_fill(t_game *game)
 
 static int	flood_fill(char **map_copy, int y, int x, int height)
 {
-	// Condição de parada: Se atingir a borda do mapa é pq ta aberto.
 	if (y < 0 || y >= height || x < 0 || !map_copy[y] || !map_copy[y][x]
 		|| map_copy[y][x] == ' ')
 		return (0);
-	// Condição de parada: Se encontrar uma parede ('1') ou já foi preenchido ('F')
 	if (map_copy[y][x] == '1' || map_copy[y][x] == 'F')
 		return (1);
 	map_copy[y][x] = 'F';
@@ -66,7 +64,7 @@ static int	flood_fill(char **map_copy, int y, int x, int height)
 static char	**duplicate_map(t_game *game)
 {
 	char	**copy;
-	int	i;
+	int		i;
 
 	i = 0;
 	while (game->map[i])
