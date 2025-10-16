@@ -6,42 +6,21 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:11:16 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/14 13:41:13 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:06:51 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-static void	validate_map_content(t_game *game, int *player_count);
 static void	check_extra_data(int fd, t_game *game);
+static char	*read_map_buffer(int fd);
+static void	process_map_line(char **map_buffer, char *line, int *started);
 
 void	parse_map(int fd, t_game *game)
 {
-	char	*line;
 	char	*map_buffer;
-	char	*tmp;
-	int		started;
 
-	started = 0;
-	map_buffer = ft_strdup("");
-	while ((line = get_next_line(fd)))
-	{
-		if (!started && *line == '\n')
-		{
-			free(line);
-			continue ;
-		}
-		if (started && *line == '\n')
-		{
-			free(line);
-			break ;
-		}
-		started = 1;
-		tmp = ft_strjoin(map_buffer, line);
-		free(map_buffer);
-		map_buffer = tmp;
-		free(line);
-	}
+	map_buffer = read_map_buffer(fd);
 	if (*map_buffer == '\0')
 	{
 		print_error("Error: Map not found in the file.\n");
@@ -52,12 +31,53 @@ void	parse_map(int fd, t_game *game)
 	check_extra_data(fd, game);
 }
 
+static char	*read_map_buffer(int fd)
+{
+	char	*line;
+	char	*map_buffer;
+	int		started;
+
+	started = 0;
+	map_buffer = ft_strdup("");
+	line = get_next_line(fd);
+	while (line)
+	{
+		if ((!started && *line == '\n') || (started && *line == '\n'))
+		{
+			free(line);
+			if (started)
+				break ;
+			line = get_next_line(fd);
+			continue ;
+		}
+		process_map_line(&map_buffer, line, &started);
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (map_buffer);
+}
+
+static void	process_map_line(char **map_buffer, char *line, int *started)
+{
+	char	*tmp;
+
+	if (!(*started) && *line == '\n')
+		return ;
+	if (*started && *line == '\n')
+		return ;
+	*started = 1;
+	tmp = ft_strjoin(*map_buffer, line);
+	free(*map_buffer);
+	*map_buffer = tmp;
+}
+
 static void	check_extra_data(int fd, t_game *game)
 {
 	char	*line;
 	int		i;
 
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
 		i = 0;
 		while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n')
@@ -70,53 +90,6 @@ static void	check_extra_data(int fd, t_game *game)
 			exit(EXIT_FAILURE);
 		}
 		free(line);
-	}
-}
-
-void	validate_map(t_game *game)
-{
-	int	player_count;
-
-	player_count = 0;
-	if (!game->map || !game->map[0])
-	{
-		print_error("Error: Map is empty.\n");
-		exit(EXIT_FAILURE);
-	}
-	validate_map_content(game, &player_count);
-	if (player_count != 1)
-	{
-		print_error("Error: Map must have exactly one starting position.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
-	}
-	validate_map_with_flood_fill(game);
-}
-
-static void	validate_map_content(t_game *game, int *player_count)
-{
-	int	y;
-	int	x;
-
-	y = -1;
-	while (game->map[++y])
-	{
-		x = -1;
-		while (game->map[y][++x])
-		{
-			if (ft_strchr(" 01NSEW", game->map[y][x]) == NULL)
-			{
-				print_error("Error: Invalid character in map.\n");
-				exit(EXIT_FAILURE);
-			}
-			if (ft_strchr("NSEW", game->map[y][x]))
-			{
-				// Posiciona o jogador no centro da célula do mapa
-				game->player_x = x + 0.5;
-				game->player_y = y + 0.5;
-				game->player_dir = game->map[y][x];
-				(*player_count)++;
-			}
-		}
+		line = get_next_line(fd);
 	}
 }
