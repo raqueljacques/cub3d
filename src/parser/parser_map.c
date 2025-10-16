@@ -6,28 +6,41 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:11:16 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/08 10:44:19 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/14 13:41:13 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
 static void	validate_map_content(t_game *game, int *player_count);
+static void	check_extra_data(int fd, t_game *game);
 
 void	parse_map(int fd, t_game *game)
 {
 	char	*line;
 	char	*map_buffer;
+	char	*tmp;
+	int		started;
 
+	started = 0;
 	map_buffer = ft_strdup("");
 	while ((line = get_next_line(fd)))
 	{
-		if (*line == '\n' && *map_buffer == '\0')
+		if (!started && *line == '\n')
 		{
 			free(line);
 			continue ;
 		}
-		map_buffer = ft_strjoin(map_buffer, line);
+		if (started && *line == '\n')
+		{
+			free(line);
+			break ;
+		}
+		started = 1;
+		tmp = ft_strjoin(map_buffer, line);
+		free(map_buffer);
+		map_buffer = tmp;
+		free(line);
 	}
 	if (*map_buffer == '\0')
 	{
@@ -36,6 +49,28 @@ void	parse_map(int fd, t_game *game)
 	}
 	game->map = ft_split(map_buffer, '\n');
 	free(map_buffer);
+	check_extra_data(fd, game);
+}
+
+static void	check_extra_data(int fd, t_game *game)
+{
+	char	*line;
+	int		i;
+
+	while ((line = get_next_line(fd)))
+	{
+		i = 0;
+		while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n')
+			i++;
+		if (line[i] != '\0')
+		{
+			free(line);
+			free_game_data(game);
+			print_error("Error: Extra data after map.\n");
+			exit(EXIT_FAILURE);
+		}
+		free(line);
+	}
 }
 
 void	validate_map(t_game *game)
