@@ -6,34 +6,35 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 16:53:37 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/08 10:47:34 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/16 08:29:14 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-static void	process_element_line_tokens(char **tokens, t_game *game);
+static void	process_element_line(char *line, t_game *game);
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game);
 static int	parse_color_rgb_to_int(const char *str);
 
 void	parse_textures_and_colors(int fd, t_game *game)
 {
 	char	*line;
-	char	**tokens;
+	char	*trimmed_line;
 	int		count;
 
 	count = 0;
 	while (count < 6 && (line = get_next_line(fd)))
 	{
-		if (*line == '\n' || *line == '\0')
+		trimmed_line = ft_strtrim(line, " \t\n");
+		if (*trimmed_line == '\0')
 		{
+			free(trimmed_line);
 			free(line);
 			continue ;
 		}
-		tokens = ft_split(line, ' ');
+		free(trimmed_line);
+		process_element_line(line, game);
 		free(line);
-		process_element_line_tokens(tokens, game);
-		free_split(tokens);
 		count++;
 	}
 	if (count != 6 || game->floor_color == -1 || game->ceiling_color == -1)
@@ -44,33 +45,25 @@ void	parse_textures_and_colors(int fd, t_game *game)
 	}
 }
 
-static void	process_element_line_tokens(char **tokens, t_game *game)
+static void	process_element_line(char *line, t_game *game)
 {
-	// Regras:
-	// 1. Precisa existir os tokens
-	// 2. tokens[0] e tokens[1] não podem ser nulos pois é o identificador e o valor
-	// 3. tokens[2] deve ser nulo, pois não pode existir um terceiro token
-	if (!tokens || !tokens[0] || !tokens[1] || tokens[2])
-	{
-		print_error("Error: Invalid element format.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
-	}
-	else if (ft_strncmp(tokens[0], "NO", 3) == 0)
-		assign_and_validate_texture(&game->north_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "SO", 3) == 0)
-		assign_and_validate_texture(&game->south_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "WE", 3) == 0)
-		assign_and_validate_texture(&game->west_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "EA", 3) == 0)
-		assign_and_validate_texture(&game->east_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "F", 2) == 0)
-		game->floor_color = parse_color_rgb_to_int(tokens[1]);
-	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		game->ceiling_color = parse_color_rgb_to_int(tokens[1]);
+	while (*line && (*line == ' ' || *line == '\t'))
+		line++;
+	if (ft_strncmp(line, "NO ", 3) == 0)
+		assign_and_validate_texture(&game->north_texture, line + 3, game);
+	else if (ft_strncmp(line, "SO ", 3) == 0)
+		assign_and_validate_texture(&game->south_texture, line + 3, game);
+	else if (ft_strncmp(line, "WE ", 3) == 0)
+		assign_and_validate_texture(&game->west_texture, line + 3, game);
+	else if (ft_strncmp(line, "EA ", 3) == 0)
+		assign_and_validate_texture(&game->east_texture, line + 3, game);
+	else if (ft_strncmp(line, "F ", 2) == 0)
+		game->floor_color = parse_color_rgb_to_int(line + 2);
+	else if (ft_strncmp(line, "C ", 2) == 0)
+		game->ceiling_color = parse_color_rgb_to_int(line + 2);
 	else
 	{
-		print_error("Error: Unknown identifier found.\n");
+		print_error("Error: Invalid element format or identifier.\n");
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
@@ -82,8 +75,12 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 	char	*trimmed_path;
 
 	trimmed_path = ft_strtrim(path, " \n\t");
-	if (!trimmed_path)
+	if (!trimmed_path || *trimmed_path == '\0')
+	{
+		print_error("Error: Texture path is missing.\n");
+		free(trimmed_path);
 		exit(EXIT_FAILURE);
+	}
 	fd = open(trimmed_path, O_RDONLY);
 	if (fd < 0)
 	{
@@ -101,25 +98,34 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 
 static int	parse_color_rgb_to_int(const char *str)
 {
-	char **rgb_values;
-	int color;
-	int i;
-	int value;
+	char	**rgb_values;
+	int		color;
+	int		i;
+	int		value;
+	char	*trimmed_value;
 
 	rgb_values = ft_split(str, ',');
-	if (!rgb_values || !rgb_values[0] || !rgb_values[1] || !rgb_values[2]
-		|| rgb_values[3])
+	i = 0;
+	while (rgb_values && rgb_values[i])
+		i++;
+	if (i != 3)
+	{
+		free_split(rgb_values);
 		return (-1);
+	}
 	i = 0;
 	color = 0;
 	while (i < 3)
 	{
-		value = ft_atoi(rgb_values[i]);
-		if (value < 0 || value > 255)
+		trimmed_value = ft_strtrim(rgb_values[i], " \t\n");
+		value = ft_atoi(trimmed_value);
+		if (*trimmed_value == '\0' || value < 0 || value > 255)
 		{
+			free(trimmed_value);
 			free_split(rgb_values);
 			return (-1);
 		}
+		free(trimmed_value);
 		color = (color << 8) | value;
 		i++;
 	}
