@@ -32,4 +32,14 @@ void	parse_textures_and_colors(int fd, t_game *game);
 
 // Flood Fill Validation
 void	validate_map_with_flood_fill(t_game *game);
+
+// Engine - Camera/Direction
+void	compute_dir_plane(char dir_char, double *dir_x, double *dir_y,
+			double *plane_x, double *plane_y);
+
+// Engine - Raycasting (no rendering)
+double	cast_ray_column(const t_game *game,
+			double dir_x, double dir_y,
+			double plane_x, double plane_y,
+			int screen_x, int *out_side);
 #endif
