@@ -49,6 +49,82 @@ static unsigned int wall_color_from_side(int side)
     return side ? 0x0088FF : 0x0044AA; // darker for y-side
 }
 
+static int  imax(int a, int b) { return a > b ? a : b; }
+static int  imin(int a, int b) { return a < b ? a : b; }
+
+static void draw_rect(t_img *img, int x, int y, int w, int h, unsigned int color)
+{
+    int i, j;
+    for (j = 0; j < h; ++j)
+        for (i = 0; i < w; ++i)
+            put_pixel(img, x + i, y + j, color);
+}
+
+static void draw_line(t_img *img, int x0, int y0, int x1, int y1, unsigned int color)
+{
+    int dx = abs(x1 - x0);
+    int dy = -abs(y1 - y0);
+    int sx = x0 < x1 ? 1 : -1;
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy;
+    int e2;
+
+    while (1)
+    {
+        put_pixel(img, x0, y0, color);
+        if (x0 == x1 && y0 == y1)
+            break;
+        e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; }
+        if (e2 <= dx) { err += dx; y0 += sy; }
+    }
+}
+
+static void draw_minimap(t_game *g, t_img *img)
+{
+    int margin = 8;
+    int max_w = WINDOW_WIDTH / 3;
+    int max_h = WINDOW_HEIGHT / 3;
+    if (g->map_width <= 0 || g->map_height <= 0)
+        return;
+    int tile_x = imax(2, max_w / g->map_width);
+    int tile_y = imax(2, max_h / g->map_height);
+    int tile = imin(tile_x, tile_y);
+    int ox = margin;
+    int oy = margin;
+
+    // Tiles
+    for (int my = 0; my < g->map_height; ++my)
+    {
+        for (int mx = 0; mx < g->map_width; ++mx)
+        {
+            unsigned int color;
+            char c = g->map[my][mx];
+            if (c == TILE_WALL)
+                color = 0x222222; // wall
+            else if (c == ' ')
+                color = 0x000000; // void/outside
+            else
+                color = 0x999999; // walkable
+            draw_rect(img, ox + mx * tile, oy + my * tile, tile, tile, color);
+        }
+    }
+
+    // Player
+    int px = ox + (int)(g->player_x * tile);
+    int py = oy + (int)(g->player_y * tile);
+    int psize = imax(2, tile / 3);
+    draw_rect(img, px - psize/2, py - psize/2, psize, psize, 0xFF0000);
+
+    // Direction line
+    double dir_x, dir_y, plane_x, plane_y;
+    engine_get_dir_plane(&dir_x, &dir_y, &plane_x, &plane_y);
+    (void)plane_x; (void)plane_y;
+    int lx = px + (int)(dir_x * tile * 2.5);
+    int ly = py + (int)(dir_y * tile * 2.5);
+    draw_line(img, px, py, lx, ly, 0xFF0000);
+}
+
 void    render_frame(t_game *g)
 {
     static t_img img;
@@ -79,5 +155,7 @@ void    render_frame(t_game *g)
             put_pixel(&img, x, y, color);
     }
 
+    // Minimap overlay (top-left)
+    draw_minimap(g, &img);
     mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, img.img, 0, 0);
 }
