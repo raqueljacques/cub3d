@@ -13,36 +13,28 @@
 #include "../includes/cub3d.h"
 #include <unistd.h>
 
+void	init_game(t_game *game)
+{
+	game->mlx_ptr = mlx_init();
+	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Cub3d");
+	game->img_ptr = mlx_new_image(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	game->data = mlx_get_data_addr(game->img_ptr, &game->bpp, &game->size_line,&game->endian);
+    mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img_ptr, 0, 0);
+	
+}
 int	main(int argc, char **argv)
 {
 	t_game game;
-
-	if (argc != 2)
+	(void)argc;
+	/*if (argc != 2)
 	{
 		print_error("Usage: ./cub3d <map_file.cub>\n");
 		return (1);
-	}
+	}*/
 
 	parse_and_validate(argv[1], &game);
-
-	game.mlx_ptr = mlx_init();
-	if (!game.mlx_ptr)
-	{
-		print_error("Erro ao inicializar MinilibX\n");
-		free_game_data(&game);
-		return (1);
-	}
-	game.win_ptr = mlx_new_window(game.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
-	if (!game.win_ptr)
-	{
-		print_error("Erro ao criar janela\n");
-		free_game_data(&game);
-		return (1);
-	}
-	render_scene(&game);
+	init_game(&game);
 	mlx_loop(game.mlx_ptr);
-
-	free_game_data(&game);
-
+	
 	return (0);
 }

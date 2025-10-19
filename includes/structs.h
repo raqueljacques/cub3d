@@ -13,11 +13,17 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+
 typedef struct s_game
 {
 	void	*mlx_ptr;
 	void	*win_ptr;
-	char	*north_texture;
+	void	*img_ptr;
+	char	*data;
+	int		bpp;
+    int		size_line;
+    int		endian;
+    char	*north_texture;
 	char	*south_texture;
 	char	*west_texture;
 	char	*east_texture;
@@ -30,5 +36,6 @@ typedef struct s_game
 	double	player_y;
 	char	player_dir;
 }			t_game;
+
 
 #endif

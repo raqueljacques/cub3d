@@ -13,28 +13,24 @@
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
-/* Window dimensions */
-# define WINDOW_WIDTH 800
-# define WINDOW_HEIGHT 600
+# define KEY_ESC 65307
 
-/* Key codes (X11) */
-# define KEY_ESC   65307
-# define KEY_W     119
-# define KEY_A     97
-# define KEY_S     115
-# define KEY_D     100
-# define KEY_LEFT  65361
-# define KEY_RIGHT 65363
-
-/* Map tiles */
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
+# define MOVE_SPEED 0.08
+# define ROT_SPEED 0.045
 # define TILE_WALL '1'
-# define TILE_EMPTY '0'
-
-/* Field of view helper (plane length ~ tan(FOV/2)) */
 # define CAMERA_PLANE 0.66
 
-/* Movement settings */
-# define MOVE_SPEED 0.05
-# define ROT_SPEED  0.03
+
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define LEFT 65361
+# define RIGHT 65363
+
+# define BLOCK 64
+# define PI 3.14159265359
 
 #endif

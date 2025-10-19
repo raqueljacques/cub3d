@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <stdbool.h>
 
 # include "../libraries/minilibx/mlx.h"
 # include "../libraries/libft/libft.h"
