@@ -25,20 +25,10 @@ int	main(int argc, char **argv)
 
 	parse_and_validate(argv[1], &game);
 
-	// TODO: Inicializar a MinilibX e criar a janela
+	// Start raycasting engine (window + render + input)
+	start_engine(&game);
 
-	// TODO: Remover após testes
-	printf("Parser validation successful!\n");
-	printf("North texture path: %s\n", game.north_texture);
-	printf("South texture path: %s\n", game.south_texture);
-	printf("West texture path: %s\n", game.west_texture);
-	printf("East texture path: %s\n", game.east_texture);
-	printf("Floor color: %d\n", game.floor_color);
-	printf("Ceiling color: %d\n", game.ceiling_color);
-	printf("Player start position: (%.1f, %.1f) facing %c\n", game.player_y,
-		game.player_x, game.player_dir);
-
+	// After window loop ends (ESC or close), cleanup and exit
 	free_game_data(&game);
-
 	return (0);
 }

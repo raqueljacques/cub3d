@@ -48,4 +48,7 @@ void	engine_set_dir_plane(double dir_x, double dir_y,
 			double plane_x, double plane_y);
 void	engine_get_dir_plane(double *dir_x, double *dir_y,
 			double *plane_x, double *plane_y);
+
+// Engine - Bootstrap
+void	start_engine(t_game *game);
 #endif
