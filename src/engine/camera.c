@@ -1,38 +1,37 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   camera.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: anacarla <student@42>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/19 00:00:00 by anacarla          #+#    #+#             */
-/*   Updated: 2025/10/19 00:00:00 by anacarla         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../includes/cub3d.h"
 
-#include "../../includes/cub3d.h"
-
-void	compute_dir_plane(char dir_char, double *dir_x, double *dir_y,
-            double *plane_x, double *plane_y)
+void    compute_dir_plane(char dir_char, t_vec2 *dir, t_vec2 *plane)
 {
-	if (dir_char == 'N')
-	{
-		*dir_x = 0; *dir_y = -1;
-		*plane_x = CAMERA_PLANE; *plane_y = 0;
-	}
-	else if (dir_char == 'S')
-	{
-		*dir_x = 0; *dir_y = 1;
-		*plane_x = -CAMERA_PLANE; *plane_y = 0;
-	}
-	else if (dir_char == 'E')
-	{
-		*dir_x = 1; *dir_y = 0;
-		*plane_x = 0; *plane_y = CAMERA_PLANE;
-	}
-	else /* 'W' or fallback */
-	{
-		*dir_x = -1; *dir_y = 0;
-		*plane_x = 0; *plane_y = -CAMERA_PLANE;
-	}
+    dir->x = 0.0;
+    dir->y = 0.0;
+    plane->x = 0.0;
+    plane->y = 0.0;
+    if (dir_char == 'N')
+    {
+        dir->x = 0.0;
+        dir->y = -1.0;
+        plane->x = CAMERA_PLANE;
+        plane->y = 0.0;
+    }
+    if (dir_char == 'S')
+    {
+        dir->x = 0.0;
+        dir->y = 1.0;
+        plane->x = -CAMERA_PLANE;
+        plane->y = 0.0;
+    }
+    if (dir_char == 'E')
+    {
+        dir->x = 1.0;
+        dir->y = 0.0;
+        plane->x = 0.0;
+        plane->y = CAMERA_PLANE;
+    }
+    if (dir_char == 'W')
+    {
+        dir->x = -1.0;
+        dir->y = 0.0;
+        plane->x = 0.0;
+        plane->y = -CAMERA_PLANE;
+    }
 }
