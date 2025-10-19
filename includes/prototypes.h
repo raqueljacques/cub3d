@@ -42,4 +42,10 @@ double	cast_ray_column(const t_game *game,
 			double dir_x, double dir_y,
 			double plane_x, double plane_y,
 			int screen_x, int *out_side);
+
+// Engine - Shared state (dir/plane)
+void	engine_set_dir_plane(double dir_x, double dir_y,
+			double plane_x, double plane_y);
+void	engine_get_dir_plane(double *dir_x, double *dir_y,
+			double *plane_x, double *plane_y);
 #endif
