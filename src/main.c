@@ -25,10 +25,24 @@ int	main(int argc, char **argv)
 
 	parse_and_validate(argv[1], &game);
 
-	// Start raycasting engine (window + render + input)
-	start_engine(&game);
+	game.mlx_ptr = mlx_init();
+	if (!game.mlx_ptr)
+	{
+		print_error("Erro ao inicializar MinilibX\n");
+		free_game_data(&game);
+		return (1);
+	}
+	game.win_ptr = mlx_new_window(game.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
+	if (!game.win_ptr)
+	{
+		print_error("Erro ao criar janela\n");
+		free_game_data(&game);
+		return (1);
+	}
+	render_scene(&game);
+	mlx_loop(game.mlx_ptr);
 
-	// After window loop ends (ESC or close), cleanup and exit
 	free_game_data(&game);
+
 	return (0);
 }

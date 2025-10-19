@@ -1,5 +1,7 @@
 double cast_ray_column(t_game *game, t_vec2 dir, t_vec2 plane, int screen_x, int *out_side);
 void    compute_dir_plane(char dir_char, t_vec2 *dir, t_vec2 *plane);
+void    render_scene(t_game *game);
+void    mlx_draw_wall_column(void *mlx_ptr, void *win_ptr, int x, int start, int end, int side);
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
