@@ -16,7 +16,7 @@ LIBFT       = $(LIBFT_DIR)/libft.a
 MLX_LIB     = $(MLX_DIR)/libmlx.a
 
 # Flags extras para linkar a MinilibX no Linux
-MLXFLAGS    = -L$(MLX_DIR) -Lmlx -lmlx_Linux -lX11 -lXext
+MLXFLAGS    = -L$(MLX_DIR) -Lmlx -lmlx_Linux -lX11 -lXext -lm -lbsd
 
 # Includes do projeto + libft + minilibx
 INCLUDES    = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
