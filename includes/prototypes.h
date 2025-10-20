@@ -34,3 +34,9 @@ void	parse_textures_and_colors(int fd, t_game *game);
 // Flood Fill Validation
 void	validate_map_with_flood_fill(t_game *game);
 #endif
+
+//Player Functions
+
+int release_keys(int key, t_player *player);
+int pressing_keys(int key, t_player *player);
+void move_player(t_player *player);

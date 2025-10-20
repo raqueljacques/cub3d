@@ -57,7 +57,11 @@ int	main(int argc, char **argv)
 
 	parse_and_validate(argv[1], &game);
 	init_game(&game);
-	draw_square(WIN_WIDTH / 2, 	WIN_HEIGHT / 2, 10, 0x00FF00, &game);
+
+	mlx_hook(game.win_ptr, 2, 1L<<0, pressing_keys, &game.player);
+    mlx_hook(game.win_ptr, 3, 1L<<1, release_keys, &game.player);
+
+	mlx_loop_hook(game.mlx_ptr, draw_loop, &game);
 	mlx_loop(game.mlx_ptr);
 	
 	return (0);

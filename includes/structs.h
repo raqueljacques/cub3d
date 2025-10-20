@@ -23,6 +23,7 @@ typedef struct s_game
 	int		bpp;
     int		size_line;
     int		endian;
+	t_player player;
     char	*north_texture;
 	char	*south_texture;
 	char	*west_texture;
@@ -39,6 +40,8 @@ typedef struct s_game
 
 typedef struct s_player
 {
+	double x;
+	double y;
 	bool key_up;
 	bool key_down;
 	bool key_left;
