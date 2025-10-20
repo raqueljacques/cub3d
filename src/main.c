@@ -13,6 +13,29 @@
 #include "../includes/cub3d.h"
 #include <unistd.h>
 
+
+void put_pix(int x, int y, int color, t_game *game)
+{
+	if(x >= WIN_WIDTH || y >= WIN_HEIGHT || x < 0 || y < 0)
+		return ;
+	int index;
+	index = y *game->size_line + x * game->bpp /8;
+	game->data[index] = color & 0xFF;
+	game->data[index + 1] = (color >> 8) & 0xFF;
+	game->data[index + 2] = (color >> 16) & 0xFF;
+}
+void draw_square(int x, int y, int size, int color, t_game *game)
+{
+    for(int i = 0; i < size; i++)
+        put_pix(x + i, y, color, game);
+    for(int i = 0; i < size; i++)
+        put_pix(x, y + i, color, game);
+    for(int i = 0; i < size; i++)
+        put_pix(x + size, y + i, color, game);
+    for(int i = 0; i < size; i++)
+        put_pix(x + i, y + size, color, game);
+}
+
 void	init_game(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
@@ -34,6 +57,7 @@ int	main(int argc, char **argv)
 
 	parse_and_validate(argv[1], &game);
 	init_game(&game);
+	draw_square(WIN_WIDTH / 2, 	WIN_HEIGHT / 2, 10, 0x00FF00, &game);
 	mlx_loop(game.mlx_ptr);
 	
 	return (0);

@@ -37,5 +37,13 @@ typedef struct s_game
 	char	player_dir;
 }			t_game;
 
+typedef struct s_player
+{
+	bool key_up;
+	bool key_down;
+	bool key_left;
+	bool key_right;
+
+} t_player;
 
 #endif

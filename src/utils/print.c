@@ -17,3 +17,4 @@ int	print_error(const char *message)
     ft_putstr_fd(message, STDERR_FILENO);
     return (1);
 }
+

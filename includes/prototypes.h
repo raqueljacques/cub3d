@@ -19,6 +19,7 @@
 int		print_error(const char *message);
 void	free_game_data(t_game *game);
 void	free_split(char **split);
+void draw_square(int x, int y, int size, int color, t_game *game);
 
 // Parser
 void	parse_and_validate(char *filename, t_game *game);
