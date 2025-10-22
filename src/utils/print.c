@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 01:05:06 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/16 15:57:31 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:08:43 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	print_error(const char *message)
 	return (1);
 }
 
-void	exit_with_error(const char *msg, t_game *game)
+void	exit_error(const char *msg, t_game *game)
 {
 	print_error(msg);
 	free_game_data(game);

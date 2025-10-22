@@ -40,7 +40,7 @@ void	parse_elements(int fd, t_game *game)
 		count++;
 	}
 	if (count != 6 || game->floor_color == -1 || game->ceiling_color == -1)
-		exit_with_error("Error: Missing or invalid map elements.\n", game);
+		exit_error("Error: Missing or invalid map elements.\n", game);
 }
 
 static void	process_element_line(char *line, t_game *game)
@@ -60,7 +60,7 @@ static void	process_element_line(char *line, t_game *game)
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		game->ceiling_color = parse_color_rgb_to_int(line + 2);
 	else
-		exit_with_error("Error: Invalid element format or identifier.\n", game);
+		exit_error("Error: Invalid element format or identifier.\n", game);
 }
 
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
@@ -69,10 +69,10 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 	char	*trimmed_path;
 
 	if (*dest != NULL)
-		exit_with_error("Error: Duplicate texture detected.\n", game);
+		exit_error("Error: Duplicate texture detected.\n", game);
 	trimmed_path = ft_strtrim(path, " \n\t");
 	if (!trimmed_path || *trimmed_path == '\0')
-		exit_with_error("Error: Texture path is missing.\n", game);
+		exit_error("Error: Texture path is missing.\n", game);
 	fd = open(trimmed_path, O_RDONLY);
 	if (fd < 0)
 	{
