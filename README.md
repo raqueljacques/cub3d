@@ -52,8 +52,4 @@ make
 Projeto educacional para a 42 rj. Sem fins lucrativos.
 
 ## TODOS:
-[] - Mudar o fd para -1 depois que fechar
-[] - Mudar mensagem de erro de mapa extra no final
-[] - validar se o arquivo é xpm (validar a extensão ) (tem função na minilibx que valida)
-[] - usar a flood fill sem ser a partir do player pois se o mapa tiver fechado em volta do player mas aberto fora da erro.
-[] - validar mapa não conectado com outro mapa
+
