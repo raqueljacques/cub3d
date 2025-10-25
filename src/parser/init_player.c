@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 void    init_player_from_map(t_game *game)
 {

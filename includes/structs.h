@@ -13,6 +13,33 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef struct s_player
+{
+	double	x;
+	double	y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+	bool	key_up;
+	bool	key_down;
+	bool	key_left;
+	bool	key_right;
+	bool	turn_left;
+	bool	turn_right;
+}				t_player;
+
+typedef struct s_texture
+{
+	char	*path;
+	void	*img;
+	char	*addr;
+	int		width;
+	int		height;
+	int		bpp;
+	int		size_line;
+	int		endian;
+}				t_texture;
 
 typedef struct s_game
 {
@@ -21,13 +48,13 @@ typedef struct s_game
 	void	*img_ptr;
 	char	*data;
 	int		bpp;
-    int		size_line;
-    int		endian;
-	t_player player;
-    char	*north_texture;
-	char	*south_texture;
-	char	*west_texture;
-	char	*east_texture;
+	int		size_line;
+	int		endian;
+	t_player	player;
+	t_texture	north_texture;
+	t_texture	south_texture;
+	t_texture	west_texture;
+	t_texture	east_texture;
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
@@ -38,15 +65,6 @@ typedef struct s_game
 	char	player_dir;
 }			t_game;
 
-typedef struct s_player
-{
-	double x;
-	double y;
-	bool key_up;
-	bool key_down;
-	bool key_left;
-	bool key_right;
 
-} t_player;
 
 #endif

@@ -1,58 +1,181 @@
 #include "../../includes/cub3d.h"
 
-void player_start(t_player *player)
+static void	set_orientation(t_player *player, char dir)
 {
-    player->x = WIN_WIDTH / 2;
-    player->y = WIN_HEIGHT / 2;
-    player->key_up = false;
-    player->key_down = false;
-    player->key_left = false;
-    player->key_down = false;
+	if (dir == 'N')
+	{
+		player->dir_x = 0;
+		player->dir_y = -1;
+		player->plane_x = CAMERA_PLANE;
+		player->plane_y = 0;
+	}
+	else if (dir == 'S')
+	{
+		player->dir_x = 0;
+		player->dir_y = 1;
+		player->plane_x = -CAMERA_PLANE;
+		player->plane_y = 0;
+	}
+	else if (dir == 'E')
+	{
+		player->dir_x = 1;
+		player->dir_y = 0;
+		player->plane_x = 0;
+		player->plane_y = CAMERA_PLANE;
+	}
+	else
+	{
+		player->dir_x = -1;
+		player->dir_y = 0;
+		player->plane_x = 0;
+		player->plane_y = -CAMERA_PLANE;
+	}
 }
 
-int pressing_keys(int key, t_player *player)
+void	player_start(t_game *game)
 {
-    if(key == W)
-        player->key_up = true;
-    if(key == S)
-        player->key_down = true;
-    if(key == A)
-        player->key_left = true;
-    if(key == D)
-        player->key_right = true;
-    return (0);
+	t_player	*player;
+
+	player = &game->player;
+	player->x = game->player_x;
+	player->y = game->player_y;
+	player->key_up = false;
+	player->key_down = false;
+	player->key_left = false;
+	player->key_right = false;
+	player->turn_left = false;
+	player->turn_right = false;
+	set_orientation(player, game->player_dir);
 }
 
-int release_keys(int key, t_player *player)
+int	pressing_keys(int key, t_player *player)
 {
-    if(key == W)
-        player->key_up = false;
-    if(key == S)
-        player->key_down = false;
-    if(key == A)
-        player->key_left = false;
-    if(key == D)
-        player->key_right = false;
-    return (0);
+	if (key == KEY_ESC)
+		exit(0);
+	if (key == W)
+		player->key_up = true;
+	if (key == S)
+		player->key_down = true;
+	if (key == A)
+		player->key_left = true;
+	if (key == D)
+		player->key_right = true;
+	if (key == LEFT)
+		player->turn_left = true;
+	if (key == RIGHT)
+		player->turn_right = true;
+	return (0);
 }
 
-void move_player(t_player *player)
+int	release_keys(int key, t_player *player)
 {
-    int position;
+	if (key == W)
+		player->key_up = false;
+	if (key == S)
+		player->key_down = false;
+	if (key == A)
+		player->key_left = false;
+	if (key == D)
+		player->key_right = false;
+	if (key == LEFT)
+		player->turn_left = false;
+	if (key == RIGHT)
+		player->turn_right = false;
+	return (0);
+}
 
-    position = 4;    
-    if (player->key_up)
-        player->y -= position;
-    if (player->key_down)
-    {
-        player->y += position;
-    }
-    if (player->key_left)
-    {
-        player->x -= position;
-    }
-    if (player->key_right)
-    {
-        player->x += position;
-    }
+static int	is_walkable(t_game *game, double x, double y)
+{
+	int		map_x;
+	int		map_y;
+	size_t	len;
+	char	tile;
+
+	map_x = (int)x;
+	map_y = (int)y;
+	if (map_x < 0 || map_y < 0 || map_y >= game->map_height)
+		return (0);
+	if (!game->map[map_y])
+		return (0);
+	len = ft_strlen(game->map[map_y]);
+	if (map_x >= (int)len)
+		return (0);
+	tile = game->map[map_y][map_x];
+	if (tile == '1' || tile == ' ')
+		return (0);
+	return (1);
+}
+
+static void	move_forward_backward(t_game *game, double speed)
+{
+	t_player	*player;
+	double		new_x;
+	double		new_y;
+
+	player = &game->player;
+	new_x = player->x + player->dir_x * speed;
+	new_y = player->y + player->dir_y * speed;
+	if (is_walkable(game, new_x, player->y))
+		player->x = new_x;
+	if (is_walkable(game, player->x, new_y))
+		player->y = new_y;
+}
+
+static void	move_strafe(t_game *game, double speed)
+{
+	t_player	*player;
+	double		perp_x;
+	double		perp_y;
+	double		new_x;
+	double		new_y;
+
+	player = &game->player;
+	perp_x = -player->dir_y;
+	perp_y = player->dir_x;
+	new_x = player->x + perp_x * speed;
+	new_y = player->y + perp_y * speed;
+	if (is_walkable(game, new_x, player->y))
+		player->x = new_x;
+	if (is_walkable(game, player->x, new_y))
+		player->y = new_y;
+}
+
+static void	rotate_player(t_player *player, double angle)
+{
+	double	old_dir_x;
+	double	old_plane_x;
+	double	cos_a;
+	double	sin_a;
+
+	cos_a = cos(angle);
+	sin_a = sin(angle);
+	old_dir_x = player->dir_x;
+	player->dir_x = player->dir_x * cos_a - player->dir_y * sin_a;
+	player->dir_y = old_dir_x * sin_a + player->dir_y * cos_a;
+	old_plane_x = player->plane_x;
+	player->plane_x = player->plane_x * cos_a - player->plane_y * sin_a;
+	player->plane_y = old_plane_x * sin_a + player->plane_y * cos_a;
+}
+
+void	move_player(t_game *game)
+{
+	t_player	*player;
+	double		move_speed;
+	double		rot_speed;
+
+	player = &game->player;
+	move_speed = MOVE_SPEED;
+	rot_speed = ROT_SPEED;
+	if (player->key_up)
+		move_forward_backward(game, move_speed);
+	if (player->key_down)
+		move_forward_backward(game, -move_speed);
+	if (player->key_left)
+		move_strafe(game, -move_speed);
+	if (player->key_right)
+		move_strafe(game, move_speed);
+	if (player->turn_left)
+		rotate_player(player, -rot_speed);
+	if (player->turn_right)
+		rotate_player(player, rot_speed);
 }

@@ -13,7 +13,7 @@
 #include "../../includes/cub3d.h"
 
 static void	process_element_line_tokens(char **tokens, t_game *game);
-static void	assign_and_validate_texture(char **dest, char *path, t_game *game);
+static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game);
 static int	parse_color_rgb_to_int(const char *str);
 
 void	parse_textures_and_colors(int fd, t_game *game)
@@ -38,7 +38,7 @@ void	parse_textures_and_colors(int fd, t_game *game)
 	}
 	if (count != 6 || game->floor_color == -1 || game->ceiling_color == -1)
 	{
-		print_error("Error: Missing or invalid map elements.\n");
+        print_error("Error: Missing or invalid map elements.\n");
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
@@ -56,14 +56,14 @@ static void	process_element_line_tokens(char **tokens, t_game *game)
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
-	else if (ft_strncmp(tokens[0], "NO", 3) == 0)
-		assign_and_validate_texture(&game->north_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "SO", 3) == 0)
-		assign_and_validate_texture(&game->south_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "WE", 3) == 0)
-		assign_and_validate_texture(&game->west_texture, tokens[1], game);
-	else if (ft_strncmp(tokens[0], "EA", 3) == 0)
-		assign_and_validate_texture(&game->east_texture, tokens[1], game);
+    else if (ft_strncmp(tokens[0], "NO", 3) == 0)
+        assign_and_validate_texture(&game->north_texture, tokens[1], game);
+    else if (ft_strncmp(tokens[0], "SO", 3) == 0)
+        assign_and_validate_texture(&game->south_texture, tokens[1], game);
+    else if (ft_strncmp(tokens[0], "WE", 3) == 0)
+        assign_and_validate_texture(&game->west_texture, tokens[1], game);
+    else if (ft_strncmp(tokens[0], "EA", 3) == 0)
+        assign_and_validate_texture(&game->east_texture, tokens[1], game);
 	else if (ft_strncmp(tokens[0], "F", 2) == 0)
 		game->floor_color = parse_color_rgb_to_int(tokens[1]);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
@@ -76,7 +76,7 @@ static void	process_element_line_tokens(char **tokens, t_game *game)
 	}
 }
 
-static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
+static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game)
 {
 	int		fd;
 	char	*trimmed_path;
@@ -95,7 +95,9 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 		exit(EXIT_FAILURE);
 	}
 	close(fd);
-	*dest = ft_strdup(trimmed_path);
+	if (dest->path)
+		free(dest->path);
+	dest->path = ft_strdup(trimmed_path);
 	free(trimmed_path);
 }
 

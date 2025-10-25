@@ -12,18 +12,27 @@
 
 #include "../../includes/cub3d.h"
 
+static void	destroy_texture(t_game *game, t_texture *texture)
+{
+	if (texture->img && game->mlx_ptr)
+		mlx_destroy_image(game->mlx_ptr, texture->img);
+	if (texture->path)
+	{
+		free(texture->path);
+		texture->path = NULL;
+	}
+	texture->img = NULL;
+	texture->addr = NULL;
+}
+
 void	free_game_data(t_game *game)
 {
 	int	i;
 
-	if (game->north_texture)
-		free(game->north_texture);
-	if (game->south_texture)
-		free(game->south_texture);
-	if (game->west_texture)
-		free(game->west_texture);
-	if (game->east_texture)
-		free(game->east_texture);
+	destroy_texture(game, &game->north_texture);
+	destroy_texture(game, &game->south_texture);
+	destroy_texture(game, &game->west_texture);
+	destroy_texture(game, &game->east_texture);
 	if (game->map)
 	{
 		i = 0;
