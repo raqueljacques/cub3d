@@ -18,8 +18,15 @@ void	parse_map(int fd, t_game *game)
 {
 	char	*line;
 	char	*map_buffer;
+	char	*old;
 
 	map_buffer = ft_strdup("");
+	if (!map_buffer)
+	{
+		print_error("Error: Memory allocation failed while reading map.\n");
+		free_game_data(game);
+		exit(EXIT_FAILURE);
+	}
 	while ((line = get_next_line(fd)))
 	{
 		if (*line == '\n' && *map_buffer == '\0')
@@ -27,7 +34,16 @@ void	parse_map(int fd, t_game *game)
 			free(line);
 			continue ;
 		}
+		old = map_buffer;
 		map_buffer = ft_strjoin(map_buffer, line);
+		if (!map_buffer)
+		{
+			print_error("Error: Memory allocation failed while reading map.\n");
+			free(line);
+			free(old);
+			free_game_data(game);
+			exit(EXIT_FAILURE);
+		}
 	}
 	if (*map_buffer == '\0')
 	{
@@ -36,6 +52,19 @@ void	parse_map(int fd, t_game *game)
 	}
 	game->map = ft_split(map_buffer, '\n');
 	free(map_buffer);
+	game->map_height = 0;
+	game->map_width = 0;
+	if (game->map)
+	{
+		int line_len;
+		while (game->map[game->map_height])
+		{
+			line_len = ft_strlen(game->map[game->map_height]);
+			if (line_len > game->map_width)
+				game->map_width = line_len;
+			game->map_height++;
+		}
+	}
 }
 
 void	validate_map(t_game *game)
@@ -76,10 +105,10 @@ static void	validate_map_content(t_game *game, int *player_count)
 			}
 			if (ft_strchr("NSEW", game->map[y][x]))
 			{
-				// Posiciona o jogador no centro da célula do mapa
 				game->player_x = x + 0.5;
 				game->player_y = y + 0.5;
 				game->player_dir = game->map[y][x];
+				game->map[y][x] = '0';
 				(*player_count)++;
 			}
 		}

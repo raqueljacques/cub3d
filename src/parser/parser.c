@@ -26,6 +26,8 @@ void	parse_and_validate(char *filename, t_game *game)
 		exit(EXIT_FAILURE);
 	}
 	ft_bzero(game, sizeof(t_game));
+	game->floor_color = -1;
+	game->ceiling_color = -1;
 	parse_textures_and_colors(fd, game);
 	parse_map(fd, game);
 	validate_map(game);
