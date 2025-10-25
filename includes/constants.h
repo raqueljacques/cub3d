@@ -27,6 +27,7 @@
 # define A 97
 # define S 115
 # define D 100
+# define KEY_C 99
 # define LEFT 65361
 # define RIGHT 65363
 

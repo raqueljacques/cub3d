@@ -14,8 +14,9 @@
 
 static void	init_hooks(t_game *game)
 {
-	mlx_hook(game->win_ptr, 2, 1L << 0, pressing_keys, &game->player);
-	mlx_hook(game->win_ptr, 3, 1L << 1, release_keys, &game->player);
+	mlx_hook(game->win_ptr, 2, 1L << 0, pressing_keys, game);
+	mlx_hook(game->win_ptr, 3, 1L << 1, release_keys, game);
+	mlx_hook(game->win_ptr, 17, 0, handle_close, game);
 	mlx_loop_hook(game->mlx_ptr, render_scene, game);
 }
 

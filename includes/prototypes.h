@@ -20,6 +20,8 @@ int		print_error(const char *message);
 void	free_game_data(t_game *game);
 void	free_split(char **split);
 int		render_scene(t_game *game);
+void	cleanup_and_exit(t_game *game, int code);
+int		handle_close(t_game *game);
 
 // Parser
 void	parse_and_validate(char *filename, t_game *game);
@@ -39,8 +41,8 @@ void	load_textures(t_game *game);
 
 // Player Functions
 void	player_start(t_game *game);
-int		release_keys(int key, t_player *player);
-int		pressing_keys(int key, t_player *player);
-void	move_player(t_player *player);
+int		release_keys(int key, t_game *game);
+int		pressing_keys(int key, t_game *game);
+void	move_player(t_game *game);
 
 #endif

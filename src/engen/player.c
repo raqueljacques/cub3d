@@ -48,10 +48,13 @@ void	player_start(t_game *game)
 	set_orientation(player, game->player_dir);
 }
 
-int	pressing_keys(int key, t_player *player)
+int	pressing_keys(int key, t_game *game)
 {
-	if (key == KEY_ESC)
-		exit(0);
+	t_player	*player;
+
+	player = &game->player;
+	if (key == KEY_ESC || key == KEY_C)
+		cleanup_and_exit(game, EXIT_SUCCESS);
 	if (key == W)
 		player->key_up = true;
 	if (key == S)
@@ -67,8 +70,11 @@ int	pressing_keys(int key, t_player *player)
 	return (0);
 }
 
-int	release_keys(int key, t_player *player)
+int	release_keys(int key, t_game *game)
 {
+	t_player	*player;
+
+	player = &game->player;
 	if (key == W)
 		player->key_up = false;
 	if (key == S)
