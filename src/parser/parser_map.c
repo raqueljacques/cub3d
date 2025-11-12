@@ -1,116 +1,97 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_map.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 23:11:16 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/08 10:44:19 by rdos-san         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "../../includes/cub3d.h"
 
-static void	validate_map_content(t_game *game, int *player_count);
-
-void	parse_map(int fd, t_game *game)
+static void	check_extra_data(int *line_index, t_game *game)
 {
 	char	*line;
-	char	*map_buffer;
-	char	*old;
+	char	*trimmed_line;
 
-	map_buffer = ft_strdup("");
-	if (!map_buffer)
+	while (game->file_content[*line_index])
 	{
-		print_error("Error: Memory allocation failed while reading map.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
-	}
-	while ((line = get_next_line(fd)))
-	{
-		if (*line == '\n' && *map_buffer == '\0')
+		line = game->file_content[*line_index];
+		trimmed_line = ft_strtrim(line, " \t\n");
+		if (*trimmed_line != '\0')
 		{
-			free(line);
-			continue ;
+			free(trimmed_line);
+			exit_error("Error: Extra data after map.\n", game);
 		}
-		old = map_buffer;
-		map_buffer = ft_strjoin(map_buffer, line);
-		if (!map_buffer)
-		{
-			print_error("Error: Memory allocation failed while reading map.\n");
-			free(line);
-			free(old);
-			free_game_data(game);
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (*map_buffer == '\0')
-	{
-		print_error("Error: Map not found in the file.\n");
-		exit(EXIT_FAILURE);
-	}
-	game->map = ft_split(map_buffer, '\n');
-	free(map_buffer);
-	game->map_height = 0;
-	game->map_width = 0;
-	if (game->map)
-	{
-		int line_len;
-		while (game->map[game->map_height])
-		{
-			line_len = ft_strlen(game->map[game->map_height]);
-			if (line_len > game->map_width)
-				game->map_width = line_len;
-			game->map_height++;
-		}
+		free(trimmed_line);
+		(*line_index)++;
 	}
 }
 
-void	validate_map(t_game *game)
+static int	find_map_start(int *line_index, t_game *game)
 {
-	int	player_count;
+	char	*trimmed_line;
+	int		start_index;
 
-	player_count = 0;
-	if (!game->map || !game->map[0])
+	start_index = -1;
+	while (game->file_content[*line_index])
 	{
-		print_error("Error: Map is empty.\n");
-		exit(EXIT_FAILURE);
+		trimmed_line = ft_strtrim(game->file_content[*line_index], " \t\n");
+		if (*trimmed_line != '\0')
+		{
+			start_index = *line_index;
+			free(trimmed_line);
+			break ;
+		}
+		free(trimmed_line);
+		(*line_index)++;
 	}
-	validate_map_content(game, &player_count);
-	if (player_count != 1)
-	{
-		print_error("Error: Map must have exactly one starting position.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
-	}
-	validate_map_with_flood_fill(game);
+	if (start_index == -1)
+		exit_error("Error: Map not found in file.\n", game);
+	return (start_index);
 }
 
-static void	validate_map_content(t_game *game, int *player_count)
+static char	**copy_map_lines(int start, int end, t_game *game)
 {
-	int	y;
-	int	x;
+	char	**map_array;
+	char	*line;
+	int		height;
+	int		y;
+	int		len;
 
-	y = -1;
-	while (game->map[++y])
+	height = end - start;
+	map_array = ft_calloc(height + 1, sizeof(char *));
+	if (!map_array)
+		exit_error("Error: Malloc failed for map array.\n", game);
+	y = 0;
+	while (y < height)
 	{
-		x = -1;
-		while (game->map[y][++x])
-		{
-			if (ft_strchr(" 01NSEW", game->map[y][x]) == NULL)
-			{
-				print_error("Error: Invalid character in map.\n");
-				exit(EXIT_FAILURE);
-			}
-			if (ft_strchr("NSEW", game->map[y][x]))
-			{
-				game->player_x = x + 0.5;
-				game->player_y = y + 0.5;
-				game->player_dir = game->map[y][x];
-				game->map[y][x] = '0';
-				(*player_count)++;
-			}
-		}
+		line = game->file_content[start + y];
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			map_array[y] = ft_substr(line, 0, len - 1);
+		else
+			map_array[y] = ft_strdup(line);
+		if (!map_array[y])
+			exit_error("Error: Malloc failed for map line.\n", game);
+		y++;
 	}
+	return (map_array);
+}
+
+void	parse_map(int *line_index, t_game *game)
+{
+	char *trimmed_line;
+	int start_index;
+	int end_index;
+
+	start_index = find_map_start(line_index, game);
+	end_index = start_index;
+	while (game->file_content[end_index])
+	{
+		trimmed_line = ft_strtrim(game->file_content[end_index], " \t\n");
+		if (*trimmed_line == '\0')
+		{
+			free(trimmed_line);
+			break ;
+		}
+		free(trimmed_line);
+		end_index++;
+	}
+	*line_index = end_index;
+	game->map = copy_map_lines(start_index, end_index, game);
+	check_extra_data(line_index, game);
 }

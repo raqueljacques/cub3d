@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:11:55 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/09 19:49:12 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:50:34 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,6 @@ int	main(int argc, char **argv)
 	player_start(&game);
 	init_hooks(&game);
 	mlx_loop(game.mlx_ptr);
+  //free_game_data(&game);
 	return (0);
 }

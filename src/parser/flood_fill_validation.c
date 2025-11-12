@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/04 16:57:27 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/08 10:53:41 by rdos-san         ###   ########.fr       */
+/*   Created: 2025/10/22 15:07:34 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/10/22 15:09:34 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,71 @@
 
 static char	**duplicate_map(t_game *game);
 static int	flood_fill(char **map_copy, int y, int x, int height);
+static int	get_map_height(char **map);
+static void	check_unreachable_areas(t_game *g, char **map_c, int h);
 
 void	validate_map_with_flood_fill(t_game *game)
 {
 	char	**map_copy;
 	int		height;
-	int		is_valid;
 
-	height = 0;
-	while (game->map[height])
-		height++;
+	height = get_map_height(game->map);
 	map_copy = duplicate_map(game);
 	if (!map_copy)
 	{
-		print_error("Error: Memory allocation failed for map copy.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
+		exit_error("Error: Memory allocation failed for map copy.\n", game);
 	}
-	is_valid = flood_fill(map_copy, (int)game->player_y, (int)game->player_x,
-			height);
-	free_split(map_copy);
-	if (!is_valid)
+	if (!flood_fill(map_copy, (int)game->player_y, (int)game->player_x, height))
 	{
-		print_error("Error: The map is not enclosed by walls.\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
+		free_split(map_copy);
+		exit_error("Error: The map is not enclosed (player area is open).\n",
+			game);
 	}
+	check_unreachable_areas(game, map_copy, height);
+	free_split(map_copy);
+}
+
+static void	check_unreachable_areas(t_game *game, char **map_copy, int height)
+{
+	int	y;
+	int	x;
+
+	y = -1;
+	while (game->map[++y])
+	{
+		x = -1;
+		while (game->map[y][++x])
+		{
+			if (ft_strchr("0NSEW", game->map[y][x]))
+			{
+				if (map_copy[y][x] != 'F')
+				{
+					if (!flood_fill(map_copy, y, x, height))
+					{
+						free_split(map_copy);
+						exit_error("Error: Map has an open area.\n", game);
+					}
+				}
+			}
+		}
+	}
+}
+
+static int	get_map_height(char **map)
+{
+	int	height;
+
+	height = 0;
+	while (map[height])
+		height++;
+	return (height);
 }
 
 static int	flood_fill(char **map_copy, int y, int x, int height)
 {
-	// Condição de parada: Se atingir a borda do mapa é pq ta aberto.
 	if (y < 0 || y >= height || x < 0 || !map_copy[y] || !map_copy[y][x]
 		|| map_copy[y][x] == ' ')
 		return (0);
-	// Condição de parada: Se encontrar uma parede ('1') ou já foi preenchido ('F')
 	if (map_copy[y][x] == '1' || map_copy[y][x] == 'F')
 		return (1);
 	map_copy[y][x] = 'F';
@@ -66,7 +96,7 @@ static int	flood_fill(char **map_copy, int y, int x, int height)
 static char	**duplicate_map(t_game *game)
 {
 	char	**copy;
-	int	i;
+	int		i;
 
 	i = 0;
 	while (game->map[i])
