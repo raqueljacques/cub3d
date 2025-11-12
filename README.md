@@ -54,3 +54,4 @@ Projeto educacional para a 42 rj. Sem fins lucrativos.
 ## TODOS:
 
 [] - Tem 2 bytes de leak de memória no fluxo da gnl usado no parser. Opções: Ler todo o arquivo, colocar em um array e usar o array para fazer as validações e nao no momento em que o programa está rodando. Acredito que sempre que o mapa tiver um problema no meio da leitura das linhas vai ter vazamento de memória pois a gnl sempre deixa armazenado o '\n'.
+Quando a linha é inválida o programa para de rodar e o conteúdo lido da gnl não é liberado.
