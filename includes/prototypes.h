@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:16:14 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/22 15:10:05 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:10:56 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	free_game_data(t_game *game);
 void	free_split(char **split);
 void	exit_error(const char *msg, t_game *game);
 void	parse_and_validate(char *filename, t_game *game);
-void	parse_map(int fd, t_game *game);
-void	parse_elements(int fd, t_game *game);
+void	parse_map(int *line_index, t_game *game);
+void	parse_elements(int *line_index, t_game *game);
 void	validate_map_with_flood_fill(t_game *game);
+char	**read_file_to_array(int fd);
 #endif
