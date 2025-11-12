@@ -27,20 +27,10 @@ static void	destroy_texture(t_game *game, t_texture *texture)
 
 void	free_game_data(t_game *game)
 {
-	int	i;
-
 	destroy_texture(game, &game->north_texture);
 	destroy_texture(game, &game->south_texture);
 	destroy_texture(game, &game->west_texture);
 	destroy_texture(game, &game->east_texture);
-	if (game->north_texture)
-		free(game->north_texture);
-	if (game->south_texture)
-		free(game->south_texture);
-	if (game->west_texture)
-		free(game->west_texture);
-	if (game->east_texture)
-		free(game->east_texture);
 	if (game->map)
 		free_split(game->map);
 	if (game->file_content)

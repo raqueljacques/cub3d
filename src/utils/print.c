@@ -21,6 +21,7 @@ int	print_error(const char *message)
 void	exit_error(const char *msg, t_game *game)
 {
 	print_error(msg);
-	free_game_data(game);
+	if (game)
+		free_game_data(game);
 	exit(EXIT_FAILURE);
 }

@@ -12,7 +12,7 @@
 
 #include "../../includes/cub3d.h"
 
-static void	assign_and_validate_texture(char **dest, char *path, t_game *game);
+static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game);
 static void	process_element_line(char *line, t_game *game);
 
 void	parse_elements(int *line_index, t_game *game)
@@ -66,7 +66,7 @@ static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *gam
 	int fd;
 	char *trimmed_path;
 
-	if (*dest != NULL)
+	if (dest->path != NULL)
 		exit_error("Error: Duplicate texture detected.\n", game);
 	trimmed_path = ft_strtrim(path, " \n\t");
 	if (!trimmed_path || *trimmed_path == '\0')

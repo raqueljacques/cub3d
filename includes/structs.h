@@ -55,10 +55,6 @@ typedef struct s_game
 	t_texture	south_texture;
 	t_texture	west_texture;
 	t_texture	east_texture;
-	char	*north_texture;
-	char	*south_texture;
-	char	*west_texture;
-	char	*east_texture;
 	char	**file_content;
 	int		floor_color;
 	int		ceiling_color;
