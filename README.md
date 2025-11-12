@@ -52,5 +52,3 @@ make
 Projeto educacional para a 42 rj. Sem fins lucrativos.
 
 ## TODOS:
-
-[] - leak encontrado quando passamos nome de mapa inválido. 

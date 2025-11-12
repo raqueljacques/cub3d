@@ -72,12 +72,24 @@ static char	**copy_map_lines(int start, int end, t_game *game)
 	return (map_array);
 }
 
-void	parse_map(int *line_index, t_game *game)
+static void set_map_dimensions(t_game *game){
+	int len;
+	game->map_height = 0; 
+	game->map_width = 0;
+	while (game->map && game->map[game->map_height])
+	{
+		len = ft_strlen(game->map[game->map_height]);
+		if (len > game->map_width)
+			game->map_width = len;
+		game->map_height++;
+	}
+}
+
+void parse_map(int *line_index, t_game *game)
 {
 	char *trimmed_line;
 	int start_index;
 	int end_index;
-
 	start_index = find_map_start(line_index, game);
 	end_index = start_index;
 	while (game->file_content[end_index])
@@ -86,12 +98,13 @@ void	parse_map(int *line_index, t_game *game)
 		if (*trimmed_line == '\0')
 		{
 			free(trimmed_line);
-			break ;
+			break;
 		}
 		free(trimmed_line);
 		end_index++;
 	}
 	*line_index = end_index;
 	game->map = copy_map_lines(start_index, end_index, game);
+	set_map_dimensions(game);
 	check_extra_data(line_index, game);
 }
