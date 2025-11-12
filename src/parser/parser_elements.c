@@ -12,32 +12,30 @@
 
 #include "../../includes/cub3d.h"
 
-static void	process_element_line(char *line, t_game *game);
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game);
+static void	process_element_line(char *line, t_game *game);
 
-void	parse_elements(int fd, t_game *game)
+void	parse_elements(int *line_index, t_game *game)
 {
 	char	*line;
 	char	*trimmed_line;
 	int		count;
 
 	count = 0;
-	line = get_next_line(fd);
-	while ((count < 6) && line)
+	while (game->file_content[*line_index] && count < 6)
 	{
+		line = game->file_content[*line_index];
 		trimmed_line = ft_strtrim(line, " \t\n");
 		if (*trimmed_line == '\0')
 		{
 			free(trimmed_line);
-			free(line);
-			line = get_next_line(fd);
+			(*line_index)++;
 			continue ;
 		}
 		free(trimmed_line);
 		process_element_line(line, game);
-		free(line);
-		line = get_next_line(fd);
 		count++;
+		(*line_index)++;
 	}
 	if (count != 6 || game->floor_color == -1 || game->ceiling_color == -1)
 		exit_error("Error: Missing or invalid map elements.\n", game);
@@ -65,8 +63,8 @@ static void	process_element_line(char *line, t_game *game)
 
 static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 {
-	int		fd;
-	char	*trimmed_path;
+	int fd;
+	char *trimmed_path;
 
 	if (*dest != NULL)
 		exit_error("Error: Duplicate texture detected.\n", game);
@@ -80,8 +78,7 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 		print_error(trimmed_path);
 		print_error("\n");
 		free(trimmed_path);
-		free_game_data(game);
-		exit(EXIT_FAILURE);
+		exit_error("", game);
 	}
 	close(fd);
 	*dest = ft_strdup(trimmed_path);
