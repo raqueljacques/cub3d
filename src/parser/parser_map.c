@@ -1,95 +1,97 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_map.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 23:11:16 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/16 16:06:51 by rdos-san         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "../../includes/cub3d.h"
 
-static void	check_extra_data(int fd, t_game *game);
-static char	*read_map_buffer(int fd);
-static void	process_map_line(char **map_buffer, char *line, int *started);
-
-void	parse_map(int fd, t_game *game)
-{
-	char	*map_buffer;
-
-	map_buffer = read_map_buffer(fd);
-	if (*map_buffer == '\0')
-	{
-		print_error("Error: Map not found in the file.\n");
-		exit(EXIT_FAILURE);
-	}
-	game->map = ft_split(map_buffer, '\n');
-	free(map_buffer);
-	check_extra_data(fd, game);
-}
-
-static char	*read_map_buffer(int fd)
+static void	check_extra_data(int *line_index, t_game *game)
 {
 	char	*line;
-	char	*map_buffer;
-	int		started;
+	char	*trimmed_line;
 
-	started = 0;
-	map_buffer = ft_strdup("");
-	line = get_next_line(fd);
-	while (line)
+	while (game->file_content[*line_index])
 	{
-		if ((!started && *line == '\n') || (started && *line == '\n'))
+		line = game->file_content[*line_index];
+		trimmed_line = ft_strtrim(line, " \t\n");
+		if (*trimmed_line != '\0')
 		{
-			free(line);
-			if (started)
-				break ;
-			line = get_next_line(fd);
-			continue ;
+			free(trimmed_line);
+			exit_error("Error: Extra data after map.\n", game);
 		}
-		process_map_line(&map_buffer, line, &started);
-		free(line);
-		line = get_next_line(fd);
+		free(trimmed_line);
+		(*line_index)++;
 	}
-	return (map_buffer);
 }
 
-static void	process_map_line(char **map_buffer, char *line, int *started)
+static int	find_map_start(int *line_index, t_game *game)
 {
-	char	*tmp;
+	char	*trimmed_line;
+	int		start_index;
 
-	if (!(*started) && *line == '\n')
-		return ;
-	if (*started && *line == '\n')
-		return ;
-	*started = 1;
-	tmp = ft_strjoin(*map_buffer, line);
-	free(*map_buffer);
-	*map_buffer = tmp;
+	start_index = -1;
+	while (game->file_content[*line_index])
+	{
+		trimmed_line = ft_strtrim(game->file_content[*line_index], " \t\n");
+		if (*trimmed_line != '\0')
+		{
+			start_index = *line_index;
+			free(trimmed_line);
+			break ;
+		}
+		free(trimmed_line);
+		(*line_index)++;
+	}
+	if (start_index == -1)
+		exit_error("Error: Map not found in file.\n", game);
+	return (start_index);
 }
 
-static void	check_extra_data(int fd, t_game *game)
+static char	**copy_map_lines(int start, int end, t_game *game)
 {
+	char	**map_array;
 	char	*line;
-	int		i;
+	int		height;
+	int		y;
+	int		len;
 
-	line = get_next_line(fd);
-	while (line)
+	height = end - start;
+	map_array = ft_calloc(height + 1, sizeof(char *));
+	if (!map_array)
+		exit_error("Error: Malloc failed for map array.\n", game);
+	y = 0;
+	while (y < height)
 	{
-		i = 0;
-		while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n')
-			i++;
-		if (line[i] != '\0')
-		{
-			free(line);
-			free_game_data(game);
-			print_error("Error: Extra data after map.\n");
-			exit(EXIT_FAILURE);
-		}
-		free(line);
-		line = get_next_line(fd);
+		line = game->file_content[start + y];
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			map_array[y] = ft_substr(line, 0, len - 1);
+		else
+			map_array[y] = ft_strdup(line);
+		if (!map_array[y])
+			exit_error("Error: Malloc failed for map line.\n", game);
+		y++;
 	}
+	return (map_array);
+}
+
+void	parse_map(int *line_index, t_game *game)
+{
+	char *trimmed_line;
+	int start_index;
+	int end_index;
+
+	start_index = find_map_start(line_index, game);
+	end_index = start_index;
+	while (game->file_content[end_index])
+	{
+		trimmed_line = ft_strtrim(game->file_content[end_index], " \t\n");
+		if (*trimmed_line == '\0')
+		{
+			free(trimmed_line);
+			break ;
+		}
+		free(trimmed_line);
+		end_index++;
+	}
+	*line_index = end_index;
+	game->map = copy_map_lines(start_index, end_index, game);
+	check_extra_data(line_index, game);
 }
