@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:16:07 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/09/30 22:24:55 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:10:13 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_game
 	char	*south_texture;
 	char	*west_texture;
 	char	*east_texture;
+	char	**file_content;
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
