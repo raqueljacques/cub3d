@@ -11,7 +11,40 @@
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-#include <unistd.h>
+
+static void	init_hooks(t_game *game)
+{
+	mlx_hook(game->win_ptr, 2, 1L << 0, pressing_keys, game);
+	mlx_hook(game->win_ptr, 3, 1L << 1, release_keys, game);
+	mlx_hook(game->win_ptr, 17, 0, handle_close, game);
+	mlx_loop_hook(game->mlx_ptr, render_scene, game);
+}
+
+static void	prepare_graphics(t_game *game)
+{
+	game->mlx_ptr = mlx_init();
+	if (!game->mlx_ptr)
+	{
+		print_error("Error: Failed to initialize MLX.\n");
+		exit(EXIT_FAILURE);
+	}
+	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Cub3d");
+	if (!game->win_ptr)
+	{
+		print_error("Error: Failed to create window.\n");
+		free_game_data(game);
+		exit(EXIT_FAILURE);
+	}
+	game->img_ptr = mlx_new_image(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	if (!game->img_ptr)
+	{
+		print_error("Error: Failed to create image buffer.\n");
+		free_game_data(game);
+		exit(EXIT_FAILURE);
+	}
+	game->data = mlx_get_data_addr(game->img_ptr, &game->bpp,
+			&game->size_line, &game->endian);
+}
 
 int	main(int argc, char **argv)
 {
@@ -23,15 +56,11 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	parse_and_validate(argv[1], &game);
-	printf("Parser validation successful!\n");
-	printf("North texture path: %s\n", game.north_texture);
-	printf("South texture path: %s\n", game.south_texture);
-	printf("West texture path: %s\n", game.west_texture);
-	printf("East texture path: %s\n", game.east_texture);
-	printf("Floor color: %d\n", game.floor_color);
-	printf("Ceiling color: %d\n", game.ceiling_color);
-	printf("Player start position: (%.1f, %.1f) facing %c\n", game.player_y,
-		game.player_x, game.player_dir);
-	free_game_data(&game);
+	prepare_graphics(&game);
+	load_textures(&game);
+	player_start(&game);
+	init_hooks(&game);
+	mlx_loop(game.mlx_ptr);
+  //free_game_data(&game);
 	return (0);
 }

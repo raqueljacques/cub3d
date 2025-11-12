@@ -61,7 +61,7 @@ static void	process_element_line(char *line, t_game *game)
 		exit_error("Error: Invalid element format or identifier.\n", game);
 }
 
-static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
+static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game)
 {
 	int fd;
 	char *trimmed_path;
@@ -81,6 +81,8 @@ static void	assign_and_validate_texture(char **dest, char *path, t_game *game)
 		exit_error("", game);
 	}
 	close(fd);
-	*dest = ft_strdup(trimmed_path);
+	if (dest->path)
+		free(dest->path);
+	dest->path = ft_strdup(trimmed_path);
 	free(trimmed_path);
 }

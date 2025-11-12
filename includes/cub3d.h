@@ -13,6 +13,15 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include <time.h>
+# include <math.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+#include <stdbool.h>
+
+# include "../libraries/minilibx/mlx.h"
 # include "../libraries/libft/get_next_line/get_next_line.h"
 # include "../libraries/libft/libft.h"
 # include "../libraries/minilibx/mlx.h"

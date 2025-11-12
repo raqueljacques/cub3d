@@ -36,7 +36,7 @@ all: $(NAME)
 # Como gerar o executável
 $(NAME): $(OBJS) $(LIBFT) $(MLX_LIB)
 	@echo "🔗 Linking $(NAME)..."
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -lm -o $(NAME)
 	@echo "✅ $(NAME) is ready."
 
 # Compila a libft
