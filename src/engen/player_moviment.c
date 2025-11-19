@@ -1,110 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   player.c                                           :+:      :+:    :+:   */
+/*   player_moviment.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/19 16:46:12 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 18:47:45 by rdos-san         ###   ########.fr       */
+/*   Created: 2025/11/19 18:54:15 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/11/19 18:54:54 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-
-static void	set_direction(t_player *player, double dx, double dy)
-{
-	player->dir_x = dx;
-	player->dir_y = dy;
-}
-
-static void	set_plane(t_player *player, double px, double py)
-{
-	player->plane_x = px;
-	player->plane_y = py;
-}
-
-static void	set_orientation(t_player *player, char dir)
-{
-	if (dir == 'N')
-	{
-		set_direction(player, 0, -1);
-		set_plane(CAMERA_PLANE, 0);
-	}
-	else if (dir == 'S')
-	{
-		set_direction(player, 0, 1);
-		set_plane(player, -CAMERA_PLANE, 0);
-	}
-	else if (dir == 'E')
-	{
-		set_direction(player, 1, 0);
-		set_plane(player, 0, CAMERA_PLANE);
-	}
-	else
-	{
-		set_direction(player, -1, 0);
-		set_plane(player, 0, -CAMERA_PLANE);
-	}
-}
-
-void	player_start(t_game *game)
-{
-	t_player	*player;
-
-	player = &game->player;
-	player->x = game->player_x;
-	player->y = game->player_y;
-	player->key_up = false;
-	player->key_down = false;
-	player->key_left = false;
-	player->key_right = false;
-	player->turn_left = false;
-	player->turn_right = false;
-	set_orientation(player, game->player_dir);
-}
-
-int	pressing_keys(int key, t_game *game)
-{
-	t_player	*player;
-
-	player = &game->player;
-	if (key == KEY_ESC || key == KEY_C)
-		cleanup_and_exit(game, EXIT_SUCCESS);
-	if (key == W)
-		player->key_up = true;
-	if (key == S)
-		player->key_down = true;
-	if (key == A)
-		player->key_left = true;
-	if (key == D)
-		player->key_right = true;
-	if (key == LEFT)
-		player->turn_left = true;
-	if (key == RIGHT)
-		player->turn_right = true;
-	return (0);
-}
-
-int	release_keys(int key, t_game *game)
-{
-	t_player	*player;
-
-	player = &game->player;
-	if (key == W)
-		player->key_up = false;
-	if (key == S)
-		player->key_down = false;
-	if (key == A)
-		player->key_left = false;
-	if (key == D)
-		player->key_right = false;
-	if (key == LEFT)
-		player->turn_left = false;
-	if (key == RIGHT)
-		player->turn_right = false;
-	return (0);
-}
 
 static int	is_walkable(t_game *game, double x, double y)
 {
