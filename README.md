@@ -52,3 +52,17 @@ make
 Projeto educacional para a 42 rj. Sem fins lucrativos.
 
 ## TODOS:
+
+teste em que o arquivo de textura está vazio. KO A janela está abrindo antes de validar as texturas
+As cores do ceiling e floor estão aceitando mais de 3 numeros
+
+Inconsistência na validação do mapa o primeiro e considerado como válido, ou seja, espaços são caracateres válidos, porém no segundo mapa onde o espaço está junto do player está sendo considerado como inválido.
+1111111  1111111111
+111N111  11     111
+1110111  11     111
+1111111  1111111111
+
+1111111  1111111111
+111N111  11     111
+111 111  11     111
+1111111  1111111111
