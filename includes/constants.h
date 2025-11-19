@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:42:57 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/09/27 00:42:57 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/19 19:06:08 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # define ROT_SPEED 0.045
 # define TILE_WALL '1'
 # define CAMERA_PLANE 0.66
-
 
 # define W 119
 # define A 97
