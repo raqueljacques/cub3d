@@ -6,16 +6,20 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:46:12 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 18:31:07 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/19 18:47:45 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-static void	set_direction_plane(t_player *player, double dx, double dy, double px, double py)
+static void	set_direction(t_player *player, double dx, double dy)
 {
 	player->dir_x = dx;
 	player->dir_y = dy;
+}
+
+static void	set_plane(t_player *player, double px, double py)
+{
 	player->plane_x = px;
 	player->plane_y = py;
 }
@@ -23,13 +27,25 @@ static void	set_direction_plane(t_player *player, double dx, double dy, double p
 static void	set_orientation(t_player *player, char dir)
 {
 	if (dir == 'N')
-		set_direction_plane(player, 0, -1, CAMERA_PLANE, 0);
+	{
+		set_direction(player, 0, -1);
+		set_plane(CAMERA_PLANE, 0);
+	}
 	else if (dir == 'S')
-		set_direction_plane(player, 0, 1, -CAMERA_PLANE, 0);
+	{
+		set_direction(player, 0, 1);
+		set_plane(player, -CAMERA_PLANE, 0);
+	}
 	else if (dir == 'E')
-		set_direction_plane(player, 1, 0, 0, CAMERA_PLANE);
+	{
+		set_direction(player, 1, 0);
+		set_plane(player, 0, CAMERA_PLANE);
+	}
 	else
-		set_direction_plane(player, -1, 0, 0, -CAMERA_PLANE);
+	{
+		set_direction(player, -1, 0);
+		set_plane(player, 0, -CAMERA_PLANE);
+	}
 }
 
 void	player_start(t_game *game)
