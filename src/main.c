@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:11:55 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/16 17:50:34 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/19 16:50:12 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static void	prepare_graphics(t_game *game)
 		print_error("Error: Failed to initialize MLX.\n");
 		exit(EXIT_FAILURE);
 	}
-	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Cub3d");
+	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
+			"Cub3d");
 	if (!game->win_ptr)
 	{
 		print_error("Error: Failed to create window.\n");
@@ -42,8 +43,8 @@ static void	prepare_graphics(t_game *game)
 		free_game_data(game);
 		exit(EXIT_FAILURE);
 	}
-	game->data = mlx_get_data_addr(game->img_ptr, &game->bpp,
-			&game->size_line, &game->endian);
+	game->data = mlx_get_data_addr(game->img_ptr, &game->bpp, &game->size_line,
+			&game->endian);
 }
 
 int	main(int argc, char **argv)
@@ -61,6 +62,5 @@ int	main(int argc, char **argv)
 	player_start(&game);
 	init_hooks(&game);
 	mlx_loop(game.mlx_ptr);
-  //free_game_data(&game);
 	return (0);
 }

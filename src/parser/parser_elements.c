@@ -12,7 +12,8 @@
 
 #include "../../includes/cub3d.h"
 
-static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game);
+static void	assign_and_validate_texture(t_texture *dest, char *path,
+				t_game *game);
 static void	process_element_line(char *line, t_game *game);
 
 void	parse_elements(int *line_index, t_game *game)
@@ -61,10 +62,11 @@ static void	process_element_line(char *line, t_game *game)
 		exit_error("Error: Invalid element format or identifier.\n", game);
 }
 
-static void	assign_and_validate_texture(t_texture *dest, char *path, t_game *game)
+static void	assign_and_validate_texture(t_texture *dest, char *path,
+		t_game *game)
 {
-	int fd;
-	char *trimmed_path;
+	int		fd;
+	char	*trimmed_path;
 
 	if (dest->path != NULL)
 		exit_error("Error: Duplicate texture detected.\n", game);

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_map.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 16:44:58 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/11/19 16:45:03 by rdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
@@ -72,9 +82,11 @@ static char	**copy_map_lines(int start, int end, t_game *game)
 	return (map_array);
 }
 
-static void set_map_dimensions(t_game *game){
-	int len;
-	game->map_height = 0; 
+static void	set_map_dimensions(t_game *game)
+{
+	int	len;
+
+	game->map_height = 0;
 	game->map_width = 0;
 	while (game->map && game->map[game->map_height])
 	{
@@ -85,11 +97,12 @@ static void set_map_dimensions(t_game *game){
 	}
 }
 
-void parse_map(int *line_index, t_game *game)
+void	parse_map(int *line_index, t_game *game)
 {
-	char *trimmed_line;
-	int start_index;
-	int end_index;
+	char	*trimmed_line;
+	int		start_index;
+	int		end_index;
+
 	start_index = find_map_start(line_index, game);
 	end_index = start_index;
 	while (game->file_content[end_index])
@@ -98,7 +111,7 @@ void parse_map(int *line_index, t_game *game)
 		if (*trimmed_line == '\0')
 		{
 			free(trimmed_line);
-			break;
+			break ;
 		}
 		free(trimmed_line);
 		end_index++;

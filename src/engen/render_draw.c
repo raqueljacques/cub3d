@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_draw.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 16:45:54 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/11/19 16:45:59 by rdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/render_internal.h"
 
 static void	put_pixel(t_game *game, int x, int y, int color)
@@ -37,8 +49,8 @@ static int	get_texture_color(t_texture *texture, int tex_x, int tex_y)
 {
 	char	*pixel;
 
-	pixel = texture->addr + tex_y * texture->size_line
-		+ tex_x * (texture->bpp / 8);
+	pixel = texture->addr + tex_y * texture->size_line + tex_x * (texture->bpp
+			/ 8);
 	return (*(int *)pixel);
 }
 
@@ -50,16 +62,16 @@ static void	init_sample(t_sample *sample, t_column *column)
 	if (sample->tex_x >= column->texture->width)
 		sample->tex_x = column->texture->width - 1;
 	sample->step = (double)column->texture->height / column->line_height;
-	sample->tex_pos = (column->draw_start - WIN_HEIGHT / 2
-			+ column->line_height / 2) * sample->step;
+	sample->tex_pos = (column->draw_start - WIN_HEIGHT / 2 + column->line_height
+			/ 2) * sample->step;
 }
 
 void	draw_wall_slice(t_game *game, t_column *column)
 {
 	t_sample	sample;
-	int		current;
-	int		tex_y;
-	int		color;
+	int			current;
+	int			tex_y;
+	int			color;
 
 	init_sample(&sample, column);
 	current = column->draw_start;

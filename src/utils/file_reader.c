@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_reader.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 16:47:25 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/11/19 16:47:30 by rdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
@@ -31,9 +42,9 @@ static char	**convert_list_to_array(t_stack *head)
 
 char	**read_file_to_array(int fd)
 {
-	t_stack *head;
-	t_stack *new_node;
-	char *line;
+	t_stack	*head;
+	t_stack	*new_node;
+	char	*line;
 
 	head = NULL;
 	line = get_next_line(fd);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 16:47:38 by rdos-san          #+#    #+#             */
+/*   Updated: 2025/11/19 16:58:39 by rdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 
 static void	destroy_mlx_handles(t_game *game)
@@ -12,14 +24,12 @@ static void	destroy_mlx_handles(t_game *game)
 		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 		game->win_ptr = NULL;
 	}
-#ifdef __linux__
 	if (game->mlx_ptr)
 	{
 		mlx_destroy_display(game->mlx_ptr);
 		free(game->mlx_ptr);
 		game->mlx_ptr = NULL;
 	}
-#endif
 }
 
 void	cleanup_and_exit(t_game *game, int code)
