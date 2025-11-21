@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:11:55 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/21 14:02:47 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:28:52 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	init_window_and_image(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game game;
+	t_game	game;
 
 	if (argc != 2)
 	{
