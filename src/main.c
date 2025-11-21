@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 00:11:55 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 16:50:12 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/21 14:02:47 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	init_hooks(t_game *game)
 	mlx_loop_hook(game->mlx_ptr, render_scene, game);
 }
 
-static void	prepare_graphics(t_game *game)
+static void	init_mlx_core(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
 	if (!game->mlx_ptr)
@@ -28,6 +28,10 @@ static void	prepare_graphics(t_game *game)
 		print_error("Error: Failed to initialize MLX.\n");
 		exit(EXIT_FAILURE);
 	}
+}
+
+static void	init_window_and_image(t_game *game)
+{
 	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
 			"Cub3d");
 	if (!game->win_ptr)
@@ -49,7 +53,7 @@ static void	prepare_graphics(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game	game;
+	t_game game;
 
 	if (argc != 2)
 	{
@@ -57,8 +61,9 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	parse_and_validate(argv[1], &game);
-	prepare_graphics(&game);
+	init_mlx_core(&game);
 	load_textures(&game);
+	init_window_and_image(&game);
 	player_start(&game);
 	init_hooks(&game);
 	mlx_loop(game.mlx_ptr);
