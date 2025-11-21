@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:44:45 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 16:44:49 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/21 18:31:53 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ static void	validate_map_content(t_game *game, int *player_count)
 				exit_error("Error: Invalid character in map.\n", game);
 			if (ft_strchr("NSEW", game->map[y][x]))
 			{
-				game->player_x = x + 0.5;
-				game->player_y = y + 0.5;
+				game->player_x = x;
+				game->player_y = y;
 				game->player_dir = game->map[y][x];
 				(*player_count)++;
 			}
