@@ -34,10 +34,10 @@ t_texture	*select_texture(t_game *game, int side,
 	if (side == 0)
 	{
 		if (ray_dir_x > 0)
-			return (&game->west_texture);
-		return (&game->east_texture);
+			return (&game->east_texture);
+		return (&game->west_texture);
 	}
 	if (ray_dir_y > 0)
-		return (&game->north_texture);
-	return (&game->south_texture);
+		return (&game->south_texture);
+	return (&game->north_texture);
 }
