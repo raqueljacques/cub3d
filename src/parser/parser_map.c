@@ -24,7 +24,7 @@ static void	check_extra_data(int *line_index, t_game *game)
 		if (*trimmed_line != '\0')
 		{
 			free(trimmed_line);
-			exit_error("Error: Extra data after map.\n", game);
+			exit_error("Error: Extra data.\n", game);
 		}
 		free(trimmed_line);
 		(*line_index)++;
