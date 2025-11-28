@@ -34,7 +34,7 @@ $(LIBFT):
 $(MLX_LIB):
 	@make -C $(MLX_DIR)
 
-%.o: %.c
+.c.o:
 	@echo "🛠️  Compiling $<..."
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
