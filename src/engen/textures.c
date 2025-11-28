@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   textures.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
+/*   By: acesar-p <acesar-p@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:45:29 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 16:45:30 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/11/28 17:08:47 by acesar-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ static void	load_texture(t_game *game, t_texture *texture)
 		print_error("Error: Failed to load texture: ");
 		print_error(texture->path);
 		print_error("\n");
-		free_game_data(game);
-		exit(EXIT_FAILURE);
+		cleanup_and_exit(game, EXIT_FAILURE);
 	}
 	texture->addr = mlx_get_data_addr(texture->img, &texture->bpp,
 			&texture->size_line, &texture->endian);
