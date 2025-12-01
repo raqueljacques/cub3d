@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 15:07:34 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/10/22 15:09:34 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:11:01 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ void	validate_map_with_flood_fill(t_game *game)
 	if (!flood_fill(map_copy, (int)game->player_y, (int)game->player_x, height))
 	{
 		free_split(map_copy);
-		exit_error("Error: The map is not enclosed (player area is open).\n",
-			game);
+		exit_error("Error: The map is not enclosed.\n", game);
 	}
 	check_unreachable_areas(game, map_copy, height);
 	free_split(map_copy);
@@ -76,8 +75,11 @@ static int	get_map_height(char **map)
 
 static int	flood_fill(char **map_copy, int y, int x, int height)
 {
-	if (y < 0 || y >= height || x < 0 || !map_copy[y] || !map_copy[y][x]
-		|| map_copy[y][x] == ' ')
+	if (y < 0 || y >= height || x < 0 || !map_copy[y])
+		return (0);
+	if ((size_t)x >= ft_strlen(map_copy[y]))
+		return (0);
+	if (map_copy[y][x] == ' ' || map_copy[y][x] == '\0')
 		return (0);
 	if (map_copy[y][x] == '1' || map_copy[y][x] == 'F')
 		return (1);
