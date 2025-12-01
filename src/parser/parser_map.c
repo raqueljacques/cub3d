@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:44:58 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/11/19 16:45:03 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:18:50 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,9 @@ void	parse_map(int *line_index, t_game *game)
 	end_index = start_index;
 	while (game->file_content[end_index])
 	{
-		trimmed_line = ft_strtrim(game->file_content[end_index], " \t\n");
+		trimmed_line = ft_strtrim(game->file_content[end_index], "\n");
+		if (!trimmed_line)
+			break ;
 		if (*trimmed_line == '\0')
 		{
 			free(trimmed_line);
