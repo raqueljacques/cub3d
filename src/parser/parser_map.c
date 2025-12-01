@@ -6,7 +6,7 @@
 /*   By: rdos-san <rdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:44:58 by rdos-san          #+#    #+#             */
-/*   Updated: 2025/12/01 16:18:50 by rdos-san         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:00:34 by rdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	check_extra_data(int *line_index, t_game *game)
 		if (*trimmed_line != '\0')
 		{
 			free(trimmed_line);
-			exit_error("Error: Extra data.\n", game);
+			exit_error("Error: Invalid content in file.\n", game);
 		}
 		free(trimmed_line);
 		(*line_index)++;
